@@ -448,7 +448,11 @@ return 1
             sentinel_hosts.insert(0, (kwargs['host'], kwargs['port']))
             sentinel_server = sentinel.Sentinel(
                 sentinel_hosts,
-                socket_timeout=kwargs['socket_timeout'])
+                sentinel_kwargs={
+                    'socket_timeout': kwargs['socket_timeout'],
+                    **{arg for arg in kwargs if arg.startswith('ssl')}
+                },
+            )
             sentinel_name = kwargs['sentinel']
             del kwargs['sentinel']
             if 'sentinel_fallback' in kwargs:
